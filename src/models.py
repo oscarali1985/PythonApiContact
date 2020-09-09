@@ -9,6 +9,7 @@ class Contact(db.Model):
     address = db.Column(db.String(250), unique=False)
     phone = db.Column(db.String(50), unique=False)
     
+    
     suscripcion = db.relationship("Suscripcion", backref="Contact")
 
     def __init__(self, full_name, email, address, phone):
