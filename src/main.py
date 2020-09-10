@@ -116,7 +116,7 @@ def addContact():
             new_contacto["email"],
             new_contacto["full_name"],
             new_contacto["address"],
-            new_contacto["phone"],
+            new_contacto["phone"]
         )
         db.session.add(new_contacto)
         try:

@@ -14,14 +14,18 @@ Create an API with the following endpoints:
 4. Delete a Contact `DELETE /contact/{contact_id}` ok
 5. Update a Contact `UPDATE /contact/{contact_id}`  ok
 6. Get a list of all the Group names and ids `GET /group/all` ok
-7. Create a new Group `POST /group`
+7. Create a new Group `POST /group` ok
 8. Get a specific Group (with all Contact objects related to it) `GET /group/{group_id}`
-9. Update a Group name `UPDATE /group/{group_id}`
-10. Delete a Group `DELETE /group/{group_id}`
+9. Update a Group name `UPDATE /group/{group_id}` ok
+10. Delete a Group `DELETE /group/{group_id}` ok
 
 
 group = Group.query.get(3)
 contact = Contact.query.get(2)
+new_suscription = Suscripcion(group.id, contact.id)
+db.session.add(new_suscription)
+commit
+
 group.contacts.append(contact) # agrega el contacto con id 2 al grupo con id 3
 # también puede ser:
 contact.groups.append(group) # agrega el grupo con id 3 a los grupos del contacto con id 2
