@@ -165,7 +165,7 @@ def updateContact(contact_id):
             "resultado": "el contacto no existe..."
         }), 404
 
-@app.route('/contact/<int:contact_id>', methods = ["DELETE" ,"POST", "PUT"])
+@app.route('/contact/<int:contact_id>', methods = ["DELETE", "POST", "PUT"])
 
 def deleteContact(contact_id):
     """
@@ -200,6 +200,32 @@ def deleteContact(contact_id):
             "msj":"Metodo invalido para este que request"
         }
         return jsonify(response_body), 400
+
+
+
+#
+# Group 
+#
+@app.route('/group/all', methods=["GET", "POST", "PUT"])
+
+def getAllGroup():
+    """
+    "GET": devuelve una lista de todos los donantes
+    """
+
+    if request.method == "GET":
+        groups = Group.query.all()
+        groups_serializados = list(map(lambda groupa: groupa.serialize(), groups))
+        return jsonify(groups_serializados), 200
+        # contactos = Contact.query.all()
+        # contactos_serializados = list(map(lambda contact: contact.serialize(), contactos))
+        # return jsonify(contactos_serializados), 200
+    else:
+        response_body = {
+            "msj":"Metodo invalido para este que request"
+        }
+        return jsonify(response_body), 400
+
 
 
 # this only runs if `$ python src/main.py` is executed

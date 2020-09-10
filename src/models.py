@@ -71,6 +71,17 @@ class Group(db.Model):
 
         self.group_name = group_name
 
+    @classmethod
+    def addGroup(cls, group_name):
+        """
+        Se normaliza el registro de los grupo
+        """
+        addG = cls(
+            group_name.lower().capitalize()
+        )
+        return addG
+
+
     def __repr__(self):
         return '<Group %r>' % self.group_name
 
@@ -78,7 +89,7 @@ class Group(db.Model):
         return {
             "id": self.id,
             "group_name": self.group_name,
-            "Miembros" : [suscripcion.serialize() for suscripcion in self.contact.full_name],
+            #"Miembros" : [suscripcion.serialize() for suscripcion in self.contact.full_name],
         }
 
 class Suscripcion(db.Model):
