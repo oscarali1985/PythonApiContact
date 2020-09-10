@@ -49,6 +49,18 @@ class Contact(db.Model):
             # do not serialize the password, its a security breach
         }
 
+    def update_contact(self, diccionario):
+        """ Actualiza el contacto        """
+        if "email" in diccionario:
+            self.email = diccionario["email"]
+        if "full_name" in diccionario:
+            self.full_name = diccionario["full_name"]
+        if "address" in diccionario:
+            self.address = diccionario["address"]
+        if "phone" in diccionario:
+            self.phone = diccionario["phone"]
+        return True
+
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     group_name = db.Column(db.String(100), unique=True, nullable=False)

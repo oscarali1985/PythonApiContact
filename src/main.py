@@ -132,7 +132,38 @@ def addContact():
         }
     return jsonify(response_body), 400
 
+@app.route('/contact/<int:contact_id>', methods=["PATCH", "GET", "POST", "PUT"])
 
+def updateContact(contact_id):
+    """
+    "PATCH": devuelve una lista de un donante
+    """
+    contactoUpdate = Contact.query.get(contact_id)
+    if isinstance(contactoUpdate, Contact):
+        if request.method == "PATCH":
+            diccionario = request.get_json()
+            contactoUpdate.update_contact(diccionario)
+            try:
+                db.session.commit()
+                return jsonify(contactoUpdate.serialize()),200
+            except Exception as error:
+                db.session.rollback()
+                print(f"{error.args} {type(error)}")
+                return jsonify({
+                    "resultado": f"{error.args}"
+                }), 500
+        
+        else:
+            response_body = {
+            "msj":"Metodo invalido para este que request"
+            }
+            return jsonify(response_body), 400
+
+    else:
+        # el donante no existe!
+        return jsonify({
+            "resultado": "el contacto no existe..."
+        }), 404
 
 @app.route('/contact/<int:contact_id>', methods = ["DELETE" ,"POST", "PUT"])
 
