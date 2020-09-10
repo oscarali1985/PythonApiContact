@@ -55,6 +55,7 @@ def getAllContact():
         }
         return jsonify(response_body), 400
 
+
 @app.route('/contact/<int:cont>', methods=["GET", "POST", "PUT"])
 
 def getOneContact(cont):
@@ -210,7 +211,7 @@ def deleteContact(contact_id):
 
 def getAllGroup():
     """
-    "GET": devuelve una lista de todos los donantes
+    "GET": devuelve una lista de todos los grupo
     """
 
     if request.method == "GET":
@@ -220,6 +221,165 @@ def getAllGroup():
         # contactos = Contact.query.all()
         # contactos_serializados = list(map(lambda contact: contact.serialize(), contactos))
         # return jsonify(contactos_serializados), 200
+    else:
+        response_body = {
+            "msj":"Metodo invalido para este que request"
+        }
+        return jsonify(response_body), 400
+
+@app.route('/group/<int:cont>', methods=["GET", "POST", "PUT"])
+
+def getOneGroup(cont):
+    print(cont)
+    """
+    "GET": devuelve una lista de un donante
+    """
+
+    if request.method == "GET":
+        groupF = Group.query.filter(Group.id == cont)
+        grupos_serializados = list(map(lambda grouposf: grouposf.serialize(), groupF))
+
+        if grupos_serializados == []:
+            msj="no se encontro el grupo ingresado"
+            return jsonify(msj), 200
+        else:
+            return jsonify(grupos_serializados), 200
+    else:
+        response_body = {
+            "msj":"Metodo invalido para este que request"
+        }
+        return jsonify(response_body), 400
+
+
+
+@app.route('/group/', methods=["GET", "POST", "PUT"])
+
+def addGroup():
+    """
+    "POST": se agreaga un  contacto a la DB
+    """
+
+    if request.method == "POST":
+        new_group = request.json
+        if new_group is None:
+            return jsonify({
+                "resultado" : "Favor ingrese los datos del contacto"
+            }), 400
+        if(
+            "group_name" not in new_group
+            ):
+            return jsonify({
+                "resultado" : "Favor revise que este suministrando todos los campos requeridos ingresadas"
+            }), 400
+        if(
+            new_group["group_name"] == ""
+            ):
+            return jsonify({
+                "resultado" : "Favor revise los valores ingresados"
+            }), 400
+        new_group = Group.addGroup(
+            new_group["group_name"]
+        )
+        db.session.add(new_group)
+        try:
+            db.session.commit()
+            return jsonify(new_group.serialize()),201
+        except Exception as error:
+            db.session.rollback()
+            return jsonify({
+                "resultado": f"{error.args}"
+            }),500        
+    else:
+        response_body = {
+            "msj":"Metodo invalido para este que request"
+        }
+    return jsonify(response_body), 400
+
+@app.route('/group/<int:group_id>', methods=["PATCH", "GET", "POST", "PUT"])
+
+def updateGroup(group_id):
+    """
+    "PATCH": devuelve una lista de un donante
+    """
+    groupUpdate = Group.query.get(group_id)
+    if isinstance(groupUpdate, Group):
+        if request.method == "PATCH":
+            diccionario = request.get_json()
+            groupUpdate.update_group(diccionario)
+            try:
+                db.session.commit()
+                return jsonify(groupUpdate.serialize()),200
+            except Exception as error:
+                db.session.rollback()
+                print(f"{error.args} {type(error)}")
+                return jsonify({
+                    "resultado": f"{error.args}"
+                }), 500
+        
+        else:
+            response_body = {
+            "msj":"Metodo invalido para este que request"
+            }
+            return jsonify(response_body), 400
+
+    else:
+        # el donante no existe!
+        return jsonify({
+            "resultado": "el contacto no existe..."
+        }), 404
+
+@app.route('/group/<int:group_id>', methods = ["DELETE", "POST", "PUT"])
+
+def deleteGroup(group_id):
+    """
+    "DELETE": Elimina el contacto ingresado
+    """
+    if request.method == "DELETE":
+        grupos = Group.query.filter(Group.id == group_id)
+        grupos_serializados = list(map(lambda gruposf: gruposf.serialize(), grupos))
+
+        if grupos_serializados == []:
+            msj="no se encontro el contacto ingresado"
+            return jsonify(msj), 200
+        else:
+            # remover el donante específico de la sesión de base de datos
+            DeleteGroup = Group.query.get(group_id)
+            db.session.delete(DeleteGroup)
+            # hacer commit y devolver 204
+            try:
+                db.session.commit()
+                msj = "Se ha eliminado el grupo"
+                return jsonify({
+                "Grupo Eliminado": grupos_serializados
+            }), 205
+            except Exception as error:
+                db.session.rollback()
+                print(f"{error.args} {type(error)}")
+                return jsonify({
+                    "resultado": f"{error.args}"
+                }), 500
+    else:
+        response_body = {
+            "msj":"Metodo invalido para este que request"
+        }
+        return jsonify(response_body), 400
+
+
+#
+# Suscripcion 
+#
+
+@app.route('/sub/all', methods=["GET", "POST", "PUT"])
+
+def getAllSub():
+    """
+    "GET": devuelve una lista de todos los grupo
+    """
+
+    if request.method == "GET":
+        suscrip = Suscripcion.query.all()
+        suscrip_serializados = list(map(lambda suscripa: suscripa.serialize(), suscrip))
+        return jsonify(suscrip_serializados), 200
     else:
         response_body = {
             "msj":"Metodo invalido para este que request"

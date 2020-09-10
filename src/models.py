@@ -88,9 +88,16 @@ class Group(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "group_name": self.group_name,
+            #"group_name": self.group_name,
             #"Miembros" : [suscripcion.serialize() for suscripcion in self.contact.full_name],
         }
+
+    def update_group(self, diccionario):
+        """ Actualiza el contacto        """
+        if "group_name" in diccionario:
+            self.group_name = diccionario["group_name"]
+        
+        return True
 
 class Suscripcion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -109,6 +116,6 @@ class Suscripcion(db.Model):
         return {
             "id": self.id,
 
-            "group_name" : self.group.group_name,
-            "contact_name": self.contact.full_name
+            #"group_name" : self.group.id,
+            #"contact_name": self.contact.id
         }
