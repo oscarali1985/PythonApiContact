@@ -8,9 +8,9 @@ We are going to build the API that manages a contact-list database and publicly 
 
 Create an API with the following endpoints:
 
-1. Get a list of all the Contacts `GET /contact/all`
-2. Create a new Contact `POST /contact`
-3. Get a specific Contact (with the Group objects it belongs to) `GET /contact/{contact_id}`
+1. Get a list of all the Contacts `GET /contact/all` ok 
+2. Create a new Contact `POST /contact`  ok
+3. Get a specific Contact (with the Group objects it belongs to) `GET /contact/{contact_id}` ok
 4. Delete a Contact `DELETE /contact/{contact_id}`
 5. Update a Contact `UPDATE /contact/{contact_id}`
 6. Get a list of all the Group names and ids `GET /group/all`

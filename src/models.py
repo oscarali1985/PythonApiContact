@@ -2,6 +2,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+#
+# Todo bien hasta aqui
+#1
+
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), unique=False, nullable=False)
@@ -18,6 +22,18 @@ class Contact(db.Model):
         self.address = address
         self.phone = phone
         
+    @classmethod
+    def add(cls, full_name,email,address,phone):
+        """
+        Se normaliza el registro de la clase
+        """
+        new_contact = cls(
+            full_name,
+            email.lower().capitalize(),
+            address,
+            phone
+        )
+        return new_contact
 
     def __repr__(self):
         return '<Contact %r>' % self.full_name
@@ -29,7 +45,7 @@ class Contact(db.Model):
             "full_name": self.full_name,
             "address" : self.address,
             "phone": self.phone,
-            'suscripciones': [suscripcion.serialize() for suscripcion in self.group.group_name],
+            #"suscripciones": [suscripcion.serialize() for suscripcion in self.group.group_name],
             # do not serialize the password, its a security breach
         }
 
@@ -39,8 +55,8 @@ class Group(db.Model):
     
     suscripcion = db.relationship("Suscripcion", backref="Group")
 
-    def __init__(self, id,group_name):
-        self.id = id
+    def __init__(self, group_name):
+
         self.group_name = group_name
 
     def __repr__(self):
