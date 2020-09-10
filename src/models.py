@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 #
-# Todo bien hasta aqui
-#1
+# Contact 
+#
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)

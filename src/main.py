@@ -32,9 +32,15 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+#
+# Contact 
+#
+
+
 @app.route('/contact/all', methods=["GET", "POST", "PUT"])
 
-def getContact():
+def getAllContact():
     """
     "GET": devuelve una lista de todos los donantes
     """
@@ -76,7 +82,7 @@ def getOneContact(cont):
 
 @app.route('/contact/', methods=["GET", "POST", "PUT"])
 
-def updateContact():
+def addContact():
     """
     "POST": se agreaga un  contacto a la DB
     """
@@ -125,6 +131,45 @@ def updateContact():
             "msj":"Metodo invalido para este que request"
         }
     return jsonify(response_body), 400
+
+
+
+@app.route('/contact/<int:contact_id>', methods = ["DELETE" ,"POST", "PUT"])
+
+def deleteContact(contact_id):
+    """
+    "DELETE": Elimina el contacto ingresado
+    """
+    if request.method == "DELETE":
+        contactos = Contact.query.filter(Contact.id == contact_id)
+        contactos_serializados = list(map(lambda contact: contact.serialize(), contactos))
+
+        if contactos_serializados == []:
+            msj="no se encontro el contacto ingresado"
+            return jsonify(msj), 200
+        else:
+            # remover el donante específico de la sesión de base de datos
+            DeleteContactos = Contact.query.get(contact_id)
+            db.session.delete(DeleteContactos)
+            # hacer commit y devolver 204
+            try:
+                db.session.commit()
+                msj = "Se ha eliminado el contacto"
+                return jsonify({
+                "Contacto Eliminado": contactos_serializados
+            }), 205
+            except Exception as error:
+                db.session.rollback()
+                print(f"{error.args} {type(error)}")
+                return jsonify({
+                    "resultado": f"{error.args}"
+                }), 500
+    else:
+        response_body = {
+            "msj":"Metodo invalido para este que request"
+        }
+        return jsonify(response_body), 400
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

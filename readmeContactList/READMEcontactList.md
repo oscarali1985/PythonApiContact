@@ -11,8 +11,8 @@ Create an API with the following endpoints:
 1. Get a list of all the Contacts `GET /contact/all` ok 
 2. Create a new Contact `POST /contact`  ok
 3. Get a specific Contact (with the Group objects it belongs to) `GET /contact/{contact_id}` ok
-4. Delete a Contact `DELETE /contact/{contact_id}`
-5. Update a Contact `UPDATE /contact/{contact_id}`
+4. Delete a Contact `DELETE /contact/{contact_id}` ok
+5. Update a Contact `UPDATE /contact/{contact_id}` 
 6. Get a list of all the Group names and ids `GET /group/all`
 7. Create a new Group `POST /group`
 8. Get a specific Group (with all Contact objects related to it) `GET /group/{group_id}`
