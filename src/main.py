@@ -48,6 +48,7 @@ def getAllContact():
     if request.method == "GET":
         contactos = Contact.query.all()
         contactos_serializados = list(map(lambda contact: contact.serialize(), contactos))
+        
         return jsonify(contactos_serializados), 200
     else:
         response_body = {
@@ -94,9 +95,10 @@ def addContact():
             return jsonify({
                 "resultado" : "Favor ingrese los datos del contacto"
             }), 400
+
         if(
-            "email" not in new_contacto or
             "full_name" not in new_contacto or
+            "email" not in new_contacto or
             "address"  not in new_contacto or
             "phone" not in new_contacto
             ):
@@ -104,8 +106,8 @@ def addContact():
                 "resultado" : "Favor revise que este suministrando todos los campos requeridos ingresadas"
             }), 400
         if(
-            new_contacto["email"] == "" or
             new_contacto["full_name"] == "" or
+            new_contacto["email"] == "" or
             new_contacto["address"]  == "" or
             new_contacto["phone"] == ""
             ):
@@ -113,8 +115,8 @@ def addContact():
                 "resultado" : "Favor revise los valores ingresados"
             }), 400
         new_contacto = Contact.add(
-            new_contacto["email"],
             new_contacto["full_name"],
+            new_contacto["email"],
             new_contacto["address"],
             new_contacto["phone"]
         )
@@ -137,15 +139,23 @@ def addContact():
 
 def updateContact(contact_id):
     """
-    "PATCH": devuelve una lista de un donante
+    "PATCH": devuelve una lista de contacto
     """
     contactoUpdate = Contact.query.get(contact_id)
     if isinstance(contactoUpdate, Contact):
         if request.method == "PATCH":
             diccionario = request.get_json()
+            print(diccionario)
+            
+            group = 3
+            contact = contact_id
+            new_suscription = Suscripcion(group, contact)
             contactoUpdate.update_contact(diccionario)
+            
             try:
+                db.session.add(new_suscription)
                 db.session.commit()
+                
                 return jsonify(contactoUpdate.serialize()),200
             except Exception as error:
                 db.session.rollback()
@@ -237,7 +247,7 @@ def getOneGroup(cont):
 
     if request.method == "GET":
         groupF = Group.query.filter(Group.id == cont)
-        grupos_serializados = list(map(lambda grouposf: grouposf.serialize(), groupF))
+        grupos_serializados = list(map(lambda grouposf: grouposf.serialize2(), groupF))
 
         if grupos_serializados == []:
             msj="no se encontro el grupo ingresado"

@@ -193,7 +193,7 @@ A contact must have the following data-structure on the database:
              ]
         }
 ```
-8. Update a given group's id 
+8. Update a given group's id  ok
 ```
     REQUEST (application/json)
         type: PUT
@@ -208,7 +208,7 @@ A contact must have the following data-structure on the database:
             "name": "Beach Crew",
         }
 ```
-9. Delete a group by id 
+9. Delete a group by id ok
 ```
     REQUEST (application/json)
         type: DELETE

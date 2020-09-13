@@ -44,7 +44,7 @@ class Contact(db.Model):
             "email": self.email,
             "address" : self.address,
             "phone": self.phone,
-            "suscripciones": [suscripcion.serialize() for suscripcion in self.suscripciones]
+            "suscripciones": [suscripcion.serializeG() for suscripcion in self.suscripciones]
             # do not serialize the password, its a security breach
         }
 
@@ -59,7 +59,7 @@ class Contact(db.Model):
         if "phone" in diccionario:
             self.phone = diccionario["phone"]
         if "suscripciones" in diccionario:
-            self.phone = diccionario["suscripciones"]
+            self.suscripciones = diccionario["suscripciones"]
         return True
 
 class Group(db.Model):
@@ -90,8 +90,15 @@ class Group(db.Model):
         return {
             "id": self.id,
             "group_name": self.group_name,
-            "Miembros" : [suscripcion.serialize() for suscripcion in self.suscripciones]
+            #"Miembros" : [suscripcion.serialize() for suscripcion in self.suscripciones]
         }
+
+    def serialize2(self):
+        return {
+            "id": self.id,
+            "group_name": self.group_name,
+            "Miembros" : [suscripcion.serializeC() for suscripcion in self.suscripciones]
+        }    
 
     def update_group(self, diccionario):
         """ Actualiza el contacto        """
@@ -115,7 +122,25 @@ class Suscripcion(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
-            "group_name" : self.group.id,
-            "contact_name": self.contact.id
+            #"id": self.id,
+            "group_id" : self.group.id,
+            "contact_id": self.contact.id
         }
+
+    def serializeC(self):
+        return {
+            #"id": self.id,
+            #"group_id" : self.group.id,
+            "contact_id": self.contact.id
+        }
+
+    def serializeG(self):
+        grupo = []
+        grupo.append(self)
+        print(grupo)
+        return {
+            #"id": self.id,
+            #"group_id" : grupo,
+            #"contact_id": self.contact.id
+        }
+
