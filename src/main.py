@@ -147,13 +147,14 @@ def updateContact(contact_id):
             diccionario = request.get_json()
             print(diccionario)
             
-            group = 3
+            group = 2
             contact = contact_id
-            new_suscription = Suscripcion(group, contact)
+            new_suscription = Suscripcion(contact, group)
             contactoUpdate.update_contact(diccionario)
+            db.session.add(new_suscription)
             
             try:
-                db.session.add(new_suscription)
+                
                 db.session.commit()
                 
                 return jsonify(contactoUpdate.serialize()),200
@@ -388,7 +389,7 @@ def getAllSub():
 
     if request.method == "GET":
         suscrip = Suscripcion.query.all()
-        suscrip_serializados = list(map(lambda suscripa: suscripa.serialize(), suscrip))
+        suscrip_serializados = list(map(lambda sus: sus.serialize(), suscrip))
         return jsonify(suscrip_serializados), 200
     else:
         response_body = {

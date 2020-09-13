@@ -122,7 +122,7 @@ class Suscripcion(db.Model):
 
     def serialize(self):
         return {
-            #"id": self.id,
+            "id": self.id,
             "group_id" : self.group.id,
             "contact_id": self.contact.id
         }
@@ -135,12 +135,9 @@ class Suscripcion(db.Model):
         }
 
     def serializeG(self):
-        grupo = []
-        grupo.append(self)
-        print(grupo)
         return {
             #"id": self.id,
-            #"group_id" : grupo,
+            "group_id" : self.group.id,
             #"contact_id": self.contact.id
         }
 
