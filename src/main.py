@@ -68,7 +68,7 @@ def getOneContact(cont):
     if request.method == "GET":
         contactos = Contact.query.filter(Contact.id == cont)
         contactos_serializados = list(map(lambda contact: contact.serialize(), contactos))
-
+                
         if contactos_serializados == []:
             msj="no se encontro el contacto ingresado"
             return jsonify(msj), 200
@@ -144,19 +144,52 @@ def updateContact(contact_id):
     contactoUpdate = Contact.query.get(contact_id)
     if isinstance(contactoUpdate, Contact):
         if request.method == "PATCH":
+            valid = 3
             diccionario = request.get_json()
             print(diccionario)
-            
-            group = 2
-            contact = contact_id
-            new_suscription = Suscripcion(contact, group)
             contactoUpdate.update_contact(diccionario)
-            db.session.add(new_suscription)
+
+            groupd = diccionario["group"]
+            print(groupd)
+            getGroup = Group.query.get(groupd)
+            print(getGroup)
+            if (getGroup == None):
+                print(getGroup)
+                
+                
+            else:
+                #Se verifica si existe el registro en el contacto
+                groupreg = contactoUpdate.SusExist()
+                
+                for x, y in groupreg.items():
+                    
+                    for a in y:
+                        print(a['group_id'])
+                        if (str(a['group_id']) == str(groupd)):
+                            valid = 1
+                            break
+                        else:
+                            valid = 0
+
+                
+            # print("If valid")
+            # if (valid == True):
+            #     # se debe configurar para que se elimine
+            #     print(valid)
+                
+                
+            if (valid == 0):
+                print(valid)
+                new_suscription = Suscripcion(contact_id, groupd)
+                #getSus =Suscripcion.query.get(group)
+                #getg =Suscripcion.query.get(getSus)
+                #print(getg)
+                #print (getSus)
+                db.session.add(new_suscription)
             
             try:
                 
                 db.session.commit()
-                
                 return jsonify(contactoUpdate.serialize()),200
             except Exception as error:
                 db.session.rollback()

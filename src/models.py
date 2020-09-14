@@ -48,6 +48,14 @@ class Contact(db.Model):
             # do not serialize the password, its a security breach
         }
 
+    def SusExist(self,):
+
+        return {
+            
+            "suscripciones": [suscripcion.serializeG() for suscripcion in self.suscripciones]
+            # do not serialize the password, its a security breach
+        }
+
     def update_contact(self, diccionario):
         """ Actualiza el contacto        """
         if "full_name" in diccionario:

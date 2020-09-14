@@ -28,7 +28,7 @@ pipenv run migrate;
 pipenv run upgrade;
 ```
 pipenv run start
-pipenv shell
+pipenv she
 ## How to Start coding?
 
 There is an example API working with an example database. All your application code should be written inside the `./src/` folder.
